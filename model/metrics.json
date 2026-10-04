@@ -1,0 +1,7 @@
+{
+  "auc": 0.9693,
+  "pr_auc": 0.8719,
+  "base_default_rate": 0.175,
+  "n_train": 200000,
+  "n_test": 169596
+}
