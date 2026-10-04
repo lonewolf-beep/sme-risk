@@ -6,7 +6,10 @@ rule-based explanation in explain_text.py.
 """
 import json
 
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
+# Groq retired llama-3.3-70b-versatile on 2026-08-16. These are its documented
+# replacements. Override the first choice with GROQ_MODEL in the app secrets.
+DEFAULT_MODEL = "openai/gpt-oss-120b"
+FALLBACK_MODELS = ["openai/gpt-oss-20b"]
 
 SYSTEM_PROMPT = """You explain the output of a small-business loan default model to a non-technical reader (a recruiter or a loan officer).
 
@@ -52,11 +55,25 @@ def build_messages(facts, question=None):
     ]
 
 
-def ask_groq(messages, api_key, model=DEFAULT_MODEL, max_tokens=350, timeout=20.0):
+def ask_groq(messages, api_key, model=DEFAULT_MODEL, max_tokens=1500, timeout=30.0):
+    """Try the chosen model, then the fallbacks. Raises the last error if all fail."""
     from groq import Groq  # imported lazily so the app runs without the library
 
     client = Groq(api_key=api_key, timeout=timeout)
-    resp = client.chat.completions.create(
-        model=model, messages=messages, temperature=0.2, max_tokens=max_tokens
-    )
-    return resp.choices[0].message.content.strip()
+    candidates = [model] + [m for m in FALLBACK_MODELS if m != model]
+    last_error = None
+    for name in candidates:
+        try:
+            kwargs = dict(model=name, messages=messages, temperature=0.2,
+                          max_completion_tokens=max_tokens)
+            if name.startswith("openai/gpt-oss"):
+                # Reasoning models spend tokens thinking; keep that small.
+                kwargs["reasoning_effort"] = "low"
+            resp = client.chat.completions.create(**kwargs)
+            text = (resp.choices[0].message.content or "").strip()
+            if not text:
+                raise RuntimeError("empty response from model")
+            return text
+        except Exception as e:  # try the next model
+            last_error = e
+    raise last_error
