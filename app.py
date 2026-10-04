@@ -92,9 +92,9 @@ def ai_explanation(key, risk, base, up, down, X1):
             st.caption("Written by an AI from the numbers above. It can still "
                        "make mistakes, so check it against the figures.")
         except Exception as e:
-            st.warning("AI explanation unavailable right now "
-                       f"({type(e).__name__}). The standard explanation above "
-                       "still applies.")
+            detail = str(e).replace(str(api_key), "[key hidden]")[:300]
+            st.warning(f"AI explanation unavailable ({type(e).__name__}): "
+                       f"{detail}. The standard explanation above still applies.")
 
 
 def score_and_explain(X1: pd.DataFrame, key: str = "x"):
