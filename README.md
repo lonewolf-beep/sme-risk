@@ -2,11 +2,10 @@
 
 **An explainable machine-learning tool that estimates how likely a small-business loan is to default, and shows *why*.**
 
-**Live demo:** _add your Streamlit link here_
-
+**Live demo:** https://sme-risk.streamlit.app/
 ---
 
-## 1. What is this, in plain English?
+## 1. What this project does:
 
 When a bank lends money to a small business, some borrowers never pay it back. That is called a **default**, and the bank loses money.
 
@@ -92,11 +91,6 @@ A **gradient boosting classifier** (scikit-learn): 150 small decision trees that
 ### Optional: AI-written explanation (Groq)
 The app can also write a short credit memo or answer questions such as "What would lower this risk?". The model's own numbers (risk and SHAP contributions) are the source of truth, and the language model only turns them into prose. It is grounded on those facts, limited per session, and falls back to the rule-based explanation if the API is unavailable.
 
-To enable it, create a free key at console.groq.com/keys and add it to `.streamlit/secrets.toml` (kept out of Git):
-```
-GROQ_API_KEY = "gsk_your_key_here"
-```
-On Streamlit Cloud, paste the same line under App settings > Secrets.
 
 ---
 
@@ -122,7 +116,7 @@ On Streamlit Cloud, paste the same line under App settings > Secrets.
 
 ## 7. Results
 
-- Hold-out AUC: **_fill in from `model/metrics.json`_**
+- Hold-out AUC: 0.96
 - Effect of the recession flag: **_fill in your AUC before and after_**
 
 | Threshold | Approval rate | Default rate of approved loans | Bad loans avoided |
