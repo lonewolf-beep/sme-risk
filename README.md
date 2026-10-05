@@ -117,11 +117,11 @@ The app can also write a short credit memo or answer questions such as "What wou
 ## 7. Results
 
 - Hold-out AUC: 0.96
-- Effect of the recession flag: **_fill in your AUC before and after_**
+- Effect of the recession flag:
 
 | Threshold | Approval rate | Default rate of approved loans | Bad loans avoided |
 |---|---|---|---|
-| _copy from the app_ | | | |
+| | | | |
 
 ---
 
